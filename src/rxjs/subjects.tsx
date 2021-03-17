@@ -1,18 +1,7 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import { BehaviorSubject, Subject, Observable, ReplaySubject } from 'rxjs'
+import React from 'react'
+import { BehaviorSubject, Subject, ReplaySubject, forkJoin, of  } from 'rxjs'
 import { startWith } from 'rxjs/operators'
-
-function useSubjectValue(o: BehaviorSubject<any> | Subject<any>): readonly [string, Observable<any>] {
-    const [value, setValue] = React.useState('')
-
-    React.useEffect(() => {
-        o.subscribe(v => setValue(v))
-
-        // return () => o.unsubscribe()
-    }, [o])
-
-    return [value, o.asObservable()] as const
-}
+import { useSubjectValue } from '../utils'
 
 const Subjects = () => {
     // Behaviour Subject/BS
@@ -69,6 +58,21 @@ const Subjects = () => {
         replaySubject.subscribe(console.log)
         replaySubject.next(4)
         replaySubject.next(5)
+
+
+        // forkJoin
+        // Combine semua observer, menjadi sebuah single value object, 
+        // be like combineReducers() in Redux
+        const obs1$ = of(1)
+        const obs2$ = of(2)
+        const obs3$ = of(3)
+
+        forkJoin({
+            obs1$, 
+            obs2$, 
+            obs3$
+        }).subscribe((v) => console.log('forkJoinValues', v))
+
     }, [replaySubject])
 
     return (

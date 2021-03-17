@@ -1,19 +1,6 @@
-import React, { Dispatch, SetStateAction } from 'react'
-import { BehaviorSubject, Subject, Observable, ReplaySubject } from 'rxjs'
-import { delay, retry, retryWhen, tap } from 'rxjs/operators'
-
-// Fetch as Observable
-function get(api: string) {
-    return new Observable(subscriber => {
-        fetch(api)
-            .then(response => response.json())
-            .then((body) => {
-                subscriber.next(body)
-                subscriber.complete()
-            })
-            .catch((err) => subscriber.error(err))
-    })
-}
+import React from 'react'
+import {  retry, retryWhen } from 'rxjs/operators'
+import { get } from '../utils'
 
 const API_URL = "https://jsonplaceholder.typicode.com/posts"
 
